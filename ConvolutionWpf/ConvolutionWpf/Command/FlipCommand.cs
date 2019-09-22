@@ -28,8 +28,6 @@ namespace ConvolutionWpf.Commands
 
             var imageRes = new WriteableBitmap(2 * image.PixelWidth, image.PixelHeight, image.DpiX, image.DpiY, image.Format, image.Palette);
             var resultPixels = new byte[imageRes.PixelHeight * imageRes.BackBufferStride];
-            var indexRes = 0;
-
     
             for (int i = 0; i < image.PixelWidth; ++i)
             {
@@ -41,7 +39,6 @@ namespace ConvolutionWpf.Commands
                     for (int c = 0; c < 4; ++c)
                     {
                         resultPixels[indexWrite + c] = pixels[indexRead + c];
-                        indexRes++;
                     }
                 }
             }
@@ -51,12 +48,11 @@ namespace ConvolutionWpf.Commands
                 for (int j = image.PixelHeight - 1; j > 0; --j)
                 {
                     int indexRead = j * image.BackBufferStride + 4 * i;
-                    int indexWrite = j * imageRes.BackBufferStride + imageRes.BackBufferStride - 4 * i;
+                    int indexWrite = j * imageRes.BackBufferStride - 4 * i + imageRes.BackBufferStride;
 
                     for (int c = 0; c < 4; ++c)
                     {
                         resultPixels[indexWrite + c] = pixels[indexRead + c];
-                        indexRes++;
                     }
                 }
             }
