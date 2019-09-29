@@ -33,6 +33,11 @@ namespace ModularCircle
 
         private const double _factor = 2;
 
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
         private void Start()
         {
             double marginX = (canvas.Width - 2 * _circleRadius) / 2;
@@ -54,9 +59,8 @@ namespace ModularCircle
 
                 for (int i = 0; i < circlePoints.Length; i++)
                 {
-                    if (i * counter < circlePoints.Length) DrawLine(circlePoints[i], circlePoints[i * counter], _pointBrush);
-                    else if (i * counter >= circlePoints.Length) DrawLine(circlePoints[i], circlePoints[i * (int)counter % circlePoints.Length], _pointBrush);
-                }
+                DrawLine(circlePoints[i], circlePoints[i * (int)counter % circlePoints.Length], _pointBrush);
+            }
 
         }
 
@@ -96,12 +100,11 @@ namespace ModularCircle
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Start();
-            InitializeComponent();
-
             _circleRadius = (canvas.Height - 20) / 2;
             _circlePointCount = 200;
             _pointRadius = 2;
+
+            Start();
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
