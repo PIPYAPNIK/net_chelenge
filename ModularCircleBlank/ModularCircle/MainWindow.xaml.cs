@@ -23,15 +23,17 @@ namespace ModularCircle
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double _circleRadius;
-        private int _circlePointCount;
-        private double _pointRadius;
 
-        private readonly Brush _mainCircleBrush = Brushes.OrangeRed;
-        private readonly Brush _pointBrush = Brushes.CornflowerBlue;
-        private readonly Brush _lineBrush = Brushes.CornflowerBlue;
+        public double _circleRadius;
+        public int _circlePointCount;
+        public double _pointRadius;
+        
 
-        private const double _factor = 2;
+        public readonly Brush _mainCircleBrush = Brushes.OrangeRed;
+        public readonly Brush _pointBrush = Brushes.CornflowerBlue;
+        public readonly Brush _lineBrush = Brushes.CornflowerBlue;
+
+        public const double _factor = 2;
 
         public MainWindow()
         {
@@ -40,6 +42,10 @@ namespace ModularCircle
 
         private void Start()
         {
+ 
+            int counter = Convert.ToInt32(count.Text) + 1;
+
+            count.Text = counter.ToString();
             double marginX = (canvas.Width - 2 * _circleRadius) / 2;
             double marginY = (canvas.Height - 2 * _circleRadius) / 2;
 
@@ -55,7 +61,6 @@ namespace ModularCircle
                 DrawCircle(_pointRadius, _pointBrush, point.X - _pointRadius, point.Y - _pointRadius, true);
             }
 
-            int counter = Convert.ToInt32(count.Text);
 
                 for (int i = 0; i < circlePoints.Length; i++)
                 {
@@ -98,18 +103,35 @@ namespace ModularCircle
             canvas.Children.Add(circle);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public void Button_Click(object sender, RoutedEventArgs e)
         {
             _circleRadius = (canvas.Height - 20) / 2;
             _circlePointCount = 200;
             _pointRadius = 2;
 
+            timerStart();
+        }
+
+        private DispatcherTimer timer = null;
+
+        private void timerStart()
+        {
+            timer = new DispatcherTimer(); 
+            timer.Tick += new EventHandler(timerTick);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            timer.Start();
+        }
+
+        private void timerTick(object sender, EventArgs e)
+        {
+            canvas.Children.Clear();
             Start();
         }
 
+
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Clear();
+            timer.Stop();
         }
     }
 }
