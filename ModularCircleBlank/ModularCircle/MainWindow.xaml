@@ -10,7 +10,7 @@
     <Grid>
         <Label Content="Введите множитель" Canvas.Left="38" RenderTransformOrigin="0.197,0.962"/>
         <TextBox x:Name="count" HorizontalAlignment="Left" Height="23" Margin="134,7,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Начать вакханалию" HorizontalAlignment="Left" VerticalAlignment="Top" Width="139" Margin="271,9,0,0" Click="Button_Click"/>
+        <Button x:Name="buttonStart" Content="Начать вакханалию" HorizontalAlignment="Left" VerticalAlignment="Top" Width="139" Margin="271,9,0,0" Click="Button_Click"/>
         <Button x:Name="clear" Content="Стоп, я передумал" HorizontalAlignment="Left" VerticalAlignment="Top" Width="139" Margin="447,10,0,0" Click="Clear_Click"/>
 
         <Canvas Name="canvas" Height="672" Width="800" 

@@ -27,11 +27,40 @@ namespace ModularCircle
         public double _circleRadius;
         public int _circlePointCount;
         public double _pointRadius;
-        
+
 
         public readonly Brush _mainCircleBrush = Brushes.OrangeRed;
-        public readonly Brush _pointBrush = Brushes.CornflowerBlue;
+        public  Brush _pointBrush;
         public readonly Brush _lineBrush = Brushes.CornflowerBlue;
+
+        public static object[] array = new object[] {
+            Brushes.CornflowerBlue,
+            Brushes.Black,
+            Brushes.OrangeRed,
+            Brushes.Yellow,
+            Brushes.Silver,
+            Brushes.Red,
+            Brushes.Pink,
+            Brushes.PaleGreen,
+            Brushes.MediumSpringGreen,
+            Brushes.MediumPurple,
+            Brushes.LimeGreen,
+            Brushes.LightYellow,
+            Brushes.LightCoral,
+            Brushes.LemonChiffon,
+            Brushes.Firebrick,
+            Brushes.YellowGreen,
+            Brushes.WhiteSmoke,
+            Brushes.Thistle,
+            Brushes.SteelBlue,
+            Brushes.SkyBlue,
+            Brushes.AliceBlue,
+            Brushes.Azure,
+            Brushes.BlanchedAlmond,
+            Brushes.Brown,
+            Brushes.Chocolate,
+            Brushes.CornflowerBlue
+        };
 
         public const double _factor = 2;
 
@@ -40,10 +69,16 @@ namespace ModularCircle
             InitializeComponent();
         }
 
+        public Brush Color()
+        {
+            _pointBrush =  (Brush)array[new Random().Next(0, array.Length)];
+            return _pointBrush;
+        }
+
         private void Start()
         {
  
-            int counter = Convert.ToInt32(count.Text) + 1;
+            object counter = Convert.ToInt32(count.Text) + 1;
 
             count.Text = counter.ToString();
             double marginX = (canvas.Width - 2 * _circleRadius) / 2;
@@ -64,8 +99,9 @@ namespace ModularCircle
 
                 for (int i = 0; i < circlePoints.Length; i++)
                 {
-                DrawLine(circlePoints[i], circlePoints[i * (int)counter % circlePoints.Length], _pointBrush);
-            }
+                   Brush color = Color();
+                   DrawLine(circlePoints[i], circlePoints[i * (int)counter % circlePoints.Length], color);
+                }
 
         }
 
@@ -108,7 +144,7 @@ namespace ModularCircle
             _circleRadius = (canvas.Height - 20) / 2;
             _circlePointCount = 200;
             _pointRadius = 2;
-
+            buttonStart.IsEnabled = false;
             timerStart();
         }
 
@@ -131,6 +167,7 @@ namespace ModularCircle
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
+            buttonStart.IsEnabled = true;
             timer.Stop();
         }
     }
