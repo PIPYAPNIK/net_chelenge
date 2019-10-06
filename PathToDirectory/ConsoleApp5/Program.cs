@@ -10,13 +10,11 @@ namespace ConsoleApp5
         public static void DirShow(string dir)
         {
             string[] dirs = Directory.GetDirectories(dir);
-            if (i == dirs.Length)
-                Console.WriteLine("The end");
-            if (i < dirs.Length)
+
+            for (int i = 0; i < dirs.Length; i++)
             {
-                Console.WriteLine($"{i + 1} {dirs[i]}");
-                i++;
-                DirShow(dir);
+                Console.WriteLine(dirs[i]);
+                DirShow(dirs[i]);
             }
         }
 
@@ -25,6 +23,8 @@ namespace ConsoleApp5
             Console.WriteLine("Please write directory: ");
             string path = Console.ReadLine().ToString();
             DirShow(path);
+
+            Console.WriteLine("The End!");
             Console.ReadKey();
         }
     }

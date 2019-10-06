@@ -4,67 +4,50 @@ namespace FortBoyarGame
 {
     class Program
     {
-        static int id = 1;
-
-        static int Act(string firstName, string secondName, int move)
+        static int ComputerMove()
         {
-            if (id == 1)
-            {
-              First:
-                Console.Write($"{firstName} убирает - ");
-                move = Convert.ToInt32(Console.ReadLine());
-                if (move > 3 || move <= 0)
-                {
-                    Console.WriteLine("Упс что то не то, давай еще раз");
-                    goto First;
-                }
-                id = 2;
-            }
-            else if (id == 2)
-            {
-              Second:
-                Console.Write($"{secondName} убирает - ");
-                move = Convert.ToInt32(Console.ReadLine());
-                if (move > 3 || move <= 0)
-                {
-                    Console.WriteLine("Упс что то не то, давай еще раз");
-                    goto Second;
-                }
-                id = 1;
-            }
-            Console.WriteLine();
+            int[] computer = new int[] { 1, 2, 3 };
+            Random rand = new Random();
+            var move = computer[rand.Next(0, computer.Length)];
             return move;
         }
-        static void Game(string firstName, string secondName, int quantity)
+        static void Game(int count)
         {
-            int move = 1;
-            Console.WriteLine($"Количество палочек - {quantity}");
-
-            if (quantity > 1)
+            if (count > 1)
             {
-                move = Act(firstName, secondName, move);
-                Game(firstName, secondName, quantity - move);
+                Console.WriteLine($"Текущее кол - во палочек = {count}");
+                Console.Write($"Введите, сколько палочек вы убираете - ");
+                int move = Convert.ToInt32(Console.ReadLine());
+                if (move > 0 && move < 4)
+                {
+                    count -= move;
+                    if (count > 1)
+                    {
+                        Console.WriteLine($"Текущее кол - во палочек = {count}");
+                        int compMove = ComputerMove();
+                        Console.WriteLine($"Компьютер убирает {compMove}");
+                        count -= compMove;
+                        if (count >= 1) Game(count);
+                        else Console.WriteLine("Вы выиграли");
+                    }
+                    else Console.WriteLine("Вы приграли");
+                }
+                else
+                {
+                    Console.WriteLine("Вы что то сдеалали не так");
+                    Game(count);
+                }
             }
-            else
-            {
-                if (id == 1) Console.Write($"{firstName} проиграл ");
-                if (id == 2) Console.Write($"{secondName} проиграл ");
-            }
+            else Console.WriteLine("Вы приграли");
         }
         static void Main(string[] args)
         {
-            Console.Write("Введите имя игрока, который ходит первым - ");
-            string firstPlayer = Console.ReadLine().ToString();
-
-            Console.Write("\nВведите имя игрока, который ходит вторым - ");
-            string secondPlayer = Console.ReadLine().ToString();
-
             Console.WriteLine("Перед вам n количество палочек, каждый игрок может вытягивать 1, 2 или 3 полочки за раз. Тот кто вытянет последнюю - проиграл");
 
             Console.Write("Введите количество полочек - ");
             int shelf = Convert.ToInt32(Console.ReadLine());
 
-            Game(firstPlayer, secondPlayer, shelf);
+            Game(shelf);
             Console.ReadLine();
         }
     }
