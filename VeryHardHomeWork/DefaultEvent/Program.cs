@@ -11,9 +11,9 @@ namespace DefaultEvent
 
             watcher.Path = @"C:\test";
 
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Created += new FileSystemEventHandler(OnCreated);
-            watcher.Deleted += new FileSystemEventHandler(OnDeleted);
+            watcher.Changed += OnChanged;
+            watcher.Created += OnCreated;
+            watcher.Deleted += OnDeleted;
 
             watcher.EnableRaisingEvents = true;
 

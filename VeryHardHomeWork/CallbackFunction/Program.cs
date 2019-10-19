@@ -4,37 +4,67 @@ using System.Linq;
 
 namespace CallbackFunction
 {
+    public delegate bool ArrayFilter(int i);
+
+    static class MyExtensionMetod
+    {
+        public static bool MyAll(this int[] data, ArrayFilter filter)
+        {
+            int count = 0;
+            for (int i = 0; i <= data.Length - 1; i++)
+            {
+                if (filter(i))
+                {
+                    count++;
+                }
+            }
+
+            if (count == data.Length - 1) return true;
+            else return false;
+        }
+
+        public static bool MyAny(this int[] data, ArrayFilter filter)
+        {
+            int count = 0;
+            for (int i = 0; i < data.Length - 1; i++)
+            {
+                if (filter(i))
+                {
+                    count++;
+                }
+            }
+
+            if (count > 0)
+                return true;
+            else
+                return false;
+        }
+    }
+
     class Program
     {
-        public delegate bool ArrayFilter (int[] data);
         static void Main(string[] args)
         {
-            int[] filterArray = { 1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6 };
+            int[] filterArray = { 1, 2, 3, 4, 5 };
 
-            Filter(filterArray, AnyOdd);
+            Console.WriteLine(filterArray.MyAll(MinTen));
 
             Console.ReadKey();
         }
 
-        public static void Filter(int[] data, ArrayFilter filter)
+        public static bool Odd(int s)
         {
-            Console.WriteLine(filter(data));
+            return s % 2 == 0 && s < 0;
         }
 
-
-        public static bool AnyOdd(int[] data)
+        public static bool MinTen(int s)
         {
-            return data.Any(s => (s % 2 == 0) && (s < 0));
+            return s < 6;
         }
 
-        public static bool AllMinTen(int[] data)
+        public static bool MinHundred(int s)
         {
-            return data.All(s => s < 10);
-        }
-
-        public static bool AnyMinHundred(int[] data)
-        {
-            return data.Any(s => s < 100);
+            return s < 100;
         }
 
     }
