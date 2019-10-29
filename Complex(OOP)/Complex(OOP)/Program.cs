@@ -13,9 +13,9 @@ namespace Complex_OOP_
             itemFirst.SetValue(18, 29);
             itemSecond.SetValue(21, 5);
 
-            Complex.Addition(itemFirst, itemSecond);
-            Complex.Subtraction(itemFirst, itemSecond);
-            Complex.Multiplication(itemFirst, itemSecond);
+            Console.WriteLine(Complex.Add(itemFirst, itemSecond));
+            Console.WriteLine(Complex.Subtract(itemFirst, itemSecond));
+            Console.WriteLine(Complex.Multiplicat(itemFirst, itemSecond));
 
             Console.ReadKey();
         }

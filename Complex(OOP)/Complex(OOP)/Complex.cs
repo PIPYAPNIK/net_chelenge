@@ -6,28 +6,28 @@ namespace Complex_OOP_
 {
     class Complex
     {
-        private double actual {get; set;}
-        private double imaginary { get; set; }
+        private double _actual {get; set;}
+        private double _imaginary { get; set; }
 
         public void SetValue(double actual, double imaginary)
         {
-            this.actual = actual;
-            this.imaginary = imaginary;
+            _actual = actual;
+            _imaginary = imaginary;
         }
 
-        public static void Addition (Complex first, Complex second)
+        public static string Add (Complex first, Complex second)
         {
-            Console.WriteLine(first.actual + second.actual + ", " + first.imaginary + second.imaginary + "i");
+            return first._actual + second._actual + ", " + first._imaginary + second._imaginary + "i";
         }
 
-        public static void Subtraction(Complex first, Complex second)
+        public static string Subtract (Complex first, Complex second)
         {
-            Console.WriteLine($"{first.actual - second.actual}, {first.imaginary - second.imaginary}i");
+            return $"{first._actual - second._actual}, {first._imaginary - second._imaginary}i";
         }
 
-        public static void Multiplication(Complex first, Complex second)
+        public static string Multiplicat (Complex first, Complex second)
         {
-            Console.WriteLine($"{first.actual * second.actual - first.imaginary * second.imaginary}, {first.actual * second.imaginary - second.actual * first.imaginary}i");
+            return $"{first._actual * second._actual - first._imaginary * second._imaginary}, {first._actual * second._imaginary - second._actual * first._imaginary}i";
         }
     }
 }
