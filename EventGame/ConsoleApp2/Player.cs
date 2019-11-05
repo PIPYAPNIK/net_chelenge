@@ -16,7 +16,7 @@ namespace ConsoleApp2
 
         public void TryReflectBall (bool randEvent)
         {
-            if (randEvent)
+            if (randEvent) 
                 BallIsReflected?.Invoke(x, y, deg, playerName);
             else
                 BallIsNotReflected?.Invoke(playerName);
