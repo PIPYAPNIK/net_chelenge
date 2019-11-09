@@ -36,6 +36,12 @@ namespace Crush_Master
             this.Close();
             Form1 gameForm1 = new Form1();
             gameForm1.Close();
+
+            Form2 gameForm2 = new Form2();
+            gameForm2.Close();
+
+            Menu menu = new Menu();
+            menu.Close();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -45,7 +51,7 @@ namespace Crush_Master
 
         private void buttonMulty_Click(object sender, EventArgs e)
         {
-            
+            this.Hide();
             Form2 gameForm2 = new Form2();
             gameForm2.Show();
         }

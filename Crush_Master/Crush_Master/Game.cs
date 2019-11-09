@@ -154,6 +154,7 @@ namespace Crush_Master
             _paddle2 = SpritePaddle("Platforma3(2).png");
             _ball = SpriteBall("Shar3.png", 0);
             
+
             var blockCount = 17;
             var blockSprite = SpriteData.Load("Kirpich3.png");
             var blockStepX = blockSprite.Width / 2;
@@ -202,7 +203,7 @@ namespace Crush_Master
             }
             _gameStart = true;
             _paddle.Position = new Point((Width - _paddle.Width) / 2, Height - _paddle.Height - 50);
-            _paddle2.Position = new Point((Width - _paddle.Width) / 2, _paddle.Height);
+           _paddle2.Position = new Point((Width - _paddle.Width) / 2, _paddle.Height);
             _ball.Position = new Point((Width - _ball.Width) / 2, _paddle.Position.Y - _ball.Height);
 
             _ball.Direction = BallDirection.RightUp;
@@ -224,7 +225,7 @@ namespace Crush_Master
 
         public void SetPaddle2Position(int x)
         {
-            _paddle2.Position = new Point(x - (_paddle.Width / 2), _paddle2.Position.Y);
+            _paddle2.Position = new Point(Width - x - (_paddle2.Width / 2), _paddle2.Position.Y);
         }
 
         public void Collide(Ball gameObject, Rectangle rect2)
@@ -269,7 +270,7 @@ namespace Crush_Master
 
             // Столкновение с верхним краем игрового поля
              //if (_ball.Position.Y <= 0)
-             //    _ball.ReflectHorizontal();
+               //  _ball.ReflectHorizontal();
             
 
             // При сталкивании мяча с нижним краем игрового поля
@@ -302,10 +303,10 @@ namespace Crush_Master
                 _ball.Collide(_paddle);
             }
 
-            /*if (_ball.Bounds.IntersectsWith(_paddle2.Bounds))
+            if (_ball.Bounds.IntersectsWith(_paddle2.Bounds))
             {
                 _ball.Collide(_paddle2);
-            }*/
+            }
 
 
             // Столкновение мячика с кирпичами
@@ -348,7 +349,7 @@ namespace Crush_Master
                 // Платформа
                 _paddle.Draw(graphics);
 
-                _paddle2.Draw(graphics);
+                                                                          _paddle2.Draw(graphics);
 
                 // Мяч
                 _ball.Draw(graphics);

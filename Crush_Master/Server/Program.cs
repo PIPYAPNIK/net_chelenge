@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -19,15 +22,16 @@ namespace Server
                 Socket = socket;
             }
         }
-        static Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+        static Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         static List<Client> clients = new List<Client>();
         static Random random = new Random();
+
         static void Main(string[] args)
         {
             Console.Title = "Server";
 
-            socket.Bind(new IPEndPoint(IPAddress.Any, 2048));
-            socket.Listen(0);
+            socket.Bind(new IPEndPoint(IPAddress.Any, 8080));
+            socket.Listen(5);
 
             socket.BeginAccept(AcceptCallback, null);
 

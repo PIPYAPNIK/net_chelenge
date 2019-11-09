@@ -65,7 +65,10 @@
             this.button3.Size = new System.Drawing.Size(115, 91);
             this.button3.TabIndex = 9;
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.KeyDown += new System.Windows.Forms.KeyEventHandler(this.button3_KeyDown);
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+
+
+
             // 
             // label1
             // 
@@ -80,7 +83,7 @@
             // 
             // toolTip1
             // 
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
+
             // 
             // Form2
             // 
