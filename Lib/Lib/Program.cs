@@ -156,6 +156,7 @@ namespace Lib
             VisitToLibrary visitToLibrary8 = new VisitToLibrary(reader5.Id, bookExemplar7.libraryId, bookExemplar7.Id);
             VisitToLibrary visitToLibrary9 = new VisitToLibrary(reader5.Id, bookExemplar8.libraryId, bookExemplar8.Id);
             VisitToLibrary visitToLibrary10 = new VisitToLibrary(reader6.Id, bookExemplar8.libraryId, bookExemplar8.Id);
+            VisitToLibrary visitToLibrary11 = new VisitToLibrary(reader5.Id, bookExemplar13.libraryId, bookExemplar13.Id);
 
             List<VisitToLibrary> visitToLibraries = new List<VisitToLibrary>
             {
@@ -168,7 +169,7 @@ namespace Lib
                 visitToLibrary7,
                 visitToLibrary8,
                 visitToLibrary9,
-                //visitToLibrary10
+                visitToLibrary11
             };
 
             Console.WriteLine("Вывести список названий библиотек");
@@ -238,10 +239,10 @@ namespace Lib
 
             Console.WriteLine("\nВывести всех посетителей с группировкой по району");
             var allReadersInRegions = from v in visitToLibraries
-                                   join l in libs on v.libraryId equals l.Id
-                                   join r in readers on v.readerId equals r.Id
-                                   join reg in regions on l.regionId equals reg.Id
-                                   group r.name by reg.name;
+                                      join l in libs on v.libraryId equals l.Id
+                                      join r in readers on v.readerId equals r.Id
+                                      join reg in regions on l.regionId equals reg.Id
+                                      group r.name by reg.name;
             foreach (var r in allReadersInRegions)
             {
                 Console.WriteLine(r.Key);
@@ -249,6 +250,23 @@ namespace Lib
                 {
                     Console.WriteLine(s);
                 }
+            }
+
+            Console.WriteLine("\nВывести районы и количество посетителей. Отсортируй по количеству посетителей по убыванию");
+            var readersInRegions = from v in visitToLibraries
+                                   join l in libs on v.libraryId equals l.Id
+                                   join r in readers on v.readerId equals r.Id
+                                   join reg in regions on l.regionId equals reg.Id
+                                   orderby r.name.Count()
+                                   group r.name by reg.name into g
+                                   select new
+                                   {
+                                       count = g.Count(),
+                                       reg = g.Key
+                                   };
+            foreach (var r in readersInRegions)
+            {
+                Console.WriteLine($"{r.reg} {r.count}");
             }
 
 
