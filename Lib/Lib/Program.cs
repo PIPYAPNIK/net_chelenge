@@ -13,13 +13,15 @@ namespace Lib
             Region reg2 = new Region("North");
             Region reg3 = new Region("Zavodskoy");
             Region reg4 = new Region("Old");
+            Region reg5 = new Region("Null");
 
             List<Region> regions = new List<Region>
             {
                 reg1,
                 reg2,
                 reg3,
-                reg4
+                reg4,
+                reg5
             };
 
             Library lib1 = new Library("City Lib", reg1.Id);
@@ -132,6 +134,7 @@ namespace Lib
             Reader reader3 = new Reader("Adam");
             Reader reader4 = new Reader("Gregor");
             Reader reader5 = new Reader("Rik");
+            Reader reader6 = new Reader("Null");
 
             List<Reader> readers = new List<Reader>
             {
@@ -139,7 +142,8 @@ namespace Lib
                 reader2,
                 reader3,
                 reader4,
-                reader5
+                reader5,
+                reader6
             };
 
             VisitToLibrary visitToLibrary1 = new VisitToLibrary(reader1.Id, bookExemplar1.libraryId, bookExemplar1.Id);
@@ -151,6 +155,7 @@ namespace Lib
             VisitToLibrary visitToLibrary7 = new VisitToLibrary(reader4.Id, bookExemplar2.libraryId, bookExemplar2.Id);
             VisitToLibrary visitToLibrary8 = new VisitToLibrary(reader5.Id, bookExemplar7.libraryId, bookExemplar7.Id);
             VisitToLibrary visitToLibrary9 = new VisitToLibrary(reader5.Id, bookExemplar8.libraryId, bookExemplar8.Id);
+            VisitToLibrary visitToLibrary10 = new VisitToLibrary(reader6.Id, bookExemplar8.libraryId, bookExemplar8.Id);
 
             List<VisitToLibrary> visitToLibraries = new List<VisitToLibrary>
             {
@@ -162,13 +167,14 @@ namespace Lib
                 visitToLibrary6,
                 visitToLibrary7,
                 visitToLibrary8,
-                visitToLibrary9
+                visitToLibrary9,
+                //visitToLibrary10
             };
 
             Console.WriteLine("Вывести список названий библиотек");
             foreach(var lib in libs)
             {
-                Console.WriteLine(lib.name);
+                Console.WriteLine(lib.title);
             }
 
             Console.WriteLine("\nСгруппировать библиотеки по районам и вывести");
@@ -180,7 +186,7 @@ namespace Lib
                 {
                     Rigion = region.name,
                     CountLibs = libr.Count(),
-                    Libs = libr.Select(p => p.name)
+                    Libs = libr.Select(p => p.title)
             });
 
             foreach (var group in libsInRegions)
@@ -193,6 +199,39 @@ namespace Lib
             }
 
             Console.WriteLine("\nВывести список районов, где нет ни одной библиотеки");
+            var ldError = from r in regions
+                          join l in libs on r.Id equals l.regionId into q
+                          where q.Count() == 0
+                          select r.name;
+
+            foreach (var r in ldError)
+            {
+                Console.WriteLine(r);
+            }
+
+            Console.WriteLine("\nВывести всех посетителей всех библиотек");
+            var allReaders = from r in readers
+                             join v in visitToLibraries.Distinct() on r.Id equals v.readerId
+                             group r by r.name into g
+                             select new
+                             {
+                                rez = g.Key
+                             };
+            foreach(var r in allReaders)
+            {
+                Console.WriteLine(r.rez);
+            }
+
+            Console.WriteLine("\nВывести всех посетителей с группировкой по библиотеке");
+            //var allReadersInLibs = from v in visitToLibraries
+            //                       join l in libs on v.libraryId equals l.Id
+            //                       join r in readers on v.readerId equals r.Id
+            //                       group new {r, l} by new {l.title, r.name} into g
+            //                       select new
+            //                       {
+            //                           libName = g.
+            //                       }
+
 
             Console.ReadKey();
         }

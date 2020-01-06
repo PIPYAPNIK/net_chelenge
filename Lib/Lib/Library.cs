@@ -8,11 +8,11 @@ namespace Lib
     {
         public Guid Id { get; } = Guid.NewGuid();
         public Guid regionId { get; set; }
-        public string name { get; set; }
+        public string title { get; set; }
 
-        public Library(string _name, Guid _regionId)
+        public Library(string _title, Guid _regionId)
         {
-            name = _name;
+            title = _title;
             regionId = _regionId;
         }
     }
