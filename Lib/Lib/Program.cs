@@ -236,6 +236,21 @@ namespace Lib
                 }
             }
 
+            Console.WriteLine("\nВывести всех посетителей с группировкой по району");
+            var allReadersInRegions = from v in visitToLibraries
+                                   join l in libs on v.libraryId equals l.Id
+                                   join r in readers on v.readerId equals r.Id
+                                   join reg in regions on l.regionId equals reg.Id
+                                   group r.name by reg.name;
+            foreach (var r in allReadersInRegions)
+            {
+                Console.WriteLine(r.Key);
+                foreach (var s in r.Distinct())
+                {
+                    Console.WriteLine(s);
+                }
+            }
+
 
             Console.ReadKey();
         }
