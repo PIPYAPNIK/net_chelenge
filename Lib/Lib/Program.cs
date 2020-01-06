@@ -223,14 +223,18 @@ namespace Lib
             }
 
             Console.WriteLine("\nВывести всех посетителей с группировкой по библиотеке");
-            //var allReadersInLibs = from v in visitToLibraries
-            //                       join l in libs on v.libraryId equals l.Id
-            //                       join r in readers on v.readerId equals r.Id
-            //                       group new {r, l} by new {l.title, r.name} into g
-            //                       select new
-            //                       {
-            //                           libName = g.
-            //                       }
+            var allReadersInLibs = from v in visitToLibraries
+                                   join l in libs on v.libraryId equals l.Id
+                                   join r in readers on v.readerId equals r.Id
+                                   group r.name by l.title;
+            foreach(var l in allReadersInLibs)
+            {
+                Console.WriteLine(l.Key);
+                foreach(var r in l)
+                {
+                    Console.WriteLine(r);
+                }
+            }
 
 
             Console.ReadKey();
