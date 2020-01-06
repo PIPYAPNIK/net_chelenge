@@ -44,12 +44,14 @@ namespace Lib
             Genre it = new Genre("IT");
             Genre fantasy = new Genre("Fantasy");
             Genre detective = new Genre("Detective");
+            Genre test = new Genre("Test");
 
             List<Genre> genres = new List<Genre>
             {
                 it,
                 fantasy,
-                detective
+                detective,
+                test
             };
 
             Book languageCSharp = new Book("Programming language C#", "Troelsen", it.Id);
@@ -58,6 +60,7 @@ namespace Lib
             Book philosopherStone = new Book("Harry Potter and the philosopher's stone", "J.K.Rowling", fantasy.Id);
             Book sherlock = new Book("The hound of the Baskervilles", "Arthur Conan Doyle", detective.Id);
             Book tenNiggers = new Book("Ten little niggers", "Agatha Christie", detective.Id);
+            Book testBook = new Book("Test Book", "Agatha Christie", test.Id);
 
             List<Book> books = new List<Book>
             {
@@ -66,7 +69,8 @@ namespace Lib
                 witcher,
                 philosopherStone,
                 sherlock,
-                tenNiggers
+                tenNiggers,
+                testBook
             };
 
             Edition edition1 = new Edition(languageCSharp.Id, 1320);
@@ -200,27 +204,23 @@ namespace Lib
             }
 
             Console.WriteLine("\nВывести список районов, где нет ни одной библиотеки");
-            var ldError = from r in regions
+            var regNotLib = from r in regions
                           join l in libs on r.Id equals l.regionId into q
                           where q.Count() == 0
                           select r.name;
 
-            foreach (var r in ldError)
+            foreach (var r in regNotLib)
             {
                 Console.WriteLine(r);
             }
 
             Console.WriteLine("\nВывести всех посетителей всех библиотек");
             var allReaders = from r in readers
-                             join v in visitToLibraries.Distinct() on r.Id equals v.readerId
-                             group r by r.name into g
-                             select new
-                             {
-                                rez = g.Key
-                             };
-            foreach(var r in allReaders)
+                             join v in visitToLibraries on r.Id equals v.readerId
+                             select r.name;
+            foreach(var r in allReaders.Distinct())
             {
-                Console.WriteLine(r.rez);
+                Console.WriteLine(r);
             }
 
             Console.WriteLine("\nВывести всех посетителей с группировкой по библиотеке");
@@ -257,8 +257,8 @@ namespace Lib
                                    join l in libs on v.libraryId equals l.Id
                                    join r in readers on v.readerId equals r.Id
                                    join reg in regions on l.regionId equals reg.Id
-                                   orderby r.name.Count()
                                    group r.name by reg.name into g
+                                   orderby g.Count() descending
                                    select new
                                    {
                                        count = g.Count(),
@@ -269,6 +269,39 @@ namespace Lib
                 Console.WriteLine($"{r.reg} {r.count}");
             }
 
+            Console.WriteLine("\nДля каждого жанра посчитать количество книг в нем (по всем библиотекам (без группировки)");
+            var bookInGenre = from genr in genres
+                              join book in books on genr.Id equals book.genreId into g
+                              select new
+                              {
+                                  genreName = genr.name,
+                                  bookCount = g.Count()
+                              };
+            foreach(var g in bookInGenre)
+            {
+                Console.WriteLine($"{g.genreName} {g.bookCount}");
+            }
+
+            Console.WriteLine("\nДля каждого жанра посчитать количество книг в нем по каждой библиотеке (с группировкой по библиотеке)");
+            var bookInGenrLib = from l in libs
+                                join ex in bookExemplars.Distinct() on l.Id equals ex.libraryId
+                                join b in books on ex.bookId equals b.Id
+                                join genr in genres on b.genreId equals genr.Id
+                                group genr.name by l.title into g
+                                select new
+                                {
+                                    bookCount = g.Count(),
+                                    libName = g.Key,
+                                    genrName = g
+                                };
+            foreach(var a in bookInGenrLib)
+            {
+                Console.WriteLine(a.libName);
+                foreach (var g in a.genrName)
+                {
+                    Console.WriteLine($"{g} {a.bookCount}");
+                }
+            }
 
             Console.ReadKey();
         }
