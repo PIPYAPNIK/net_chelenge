@@ -7,11 +7,11 @@ namespace Lib
     class Genre
     {
         public Guid Id { get; } = Guid.NewGuid();
-        public string name { get; set; }
+        public string title { get; set; }
 
-        public Genre(string _name)
+        public Genre(string _title)
         {
-            name = _name;
+            title = _title;
         }
     }
 }

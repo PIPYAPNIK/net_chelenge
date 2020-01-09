@@ -113,6 +113,7 @@ namespace Lib
             BookExemplar bookExemplar13 = new BookExemplar("Soft", tenNiggers.Id, edition9.Id, lib6.Id);
             BookExemplar bookExemplar14 = new BookExemplar("Solid", tenNiggers.Id, edition10.Id, lib4.Id);
             BookExemplar bookExemplar15 = new BookExemplar("Soft", tenNiggers.Id, edition9.Id, lib2.Id);
+            BookExemplar bookExemplar16 = new BookExemplar("Solid", witcher.Id, edition5.Id, lib6.Id);
 
             List<BookExemplar> bookExemplars = new List<BookExemplar>
             {
@@ -130,7 +131,8 @@ namespace Lib
                 bookExemplar12,
                 bookExemplar13,
                 bookExemplar14,
-                bookExemplar15
+                bookExemplar15,
+                bookExemplar16
             };
 
             Reader reader1 = new Reader("Nik");
@@ -161,6 +163,7 @@ namespace Lib
             VisitToLibrary visitToLibrary9 = new VisitToLibrary(reader5.Id, bookExemplar8.libraryId, bookExemplar8.Id);
             VisitToLibrary visitToLibrary10 = new VisitToLibrary(reader6.Id, bookExemplar8.libraryId, bookExemplar8.Id);
             VisitToLibrary visitToLibrary11 = new VisitToLibrary(reader5.Id, bookExemplar13.libraryId, bookExemplar13.Id);
+            VisitToLibrary visitToLibrary12 = new VisitToLibrary(reader5.Id, bookExemplar13.libraryId, bookExemplar13.Id);
 
             List<VisitToLibrary> visitToLibraries = new List<VisitToLibrary>
             {
@@ -173,7 +176,8 @@ namespace Lib
                 visitToLibrary7,
                 visitToLibrary8,
                 visitToLibrary9,
-                visitToLibrary11
+                visitToLibrary11,
+                visitToLibrary12
             };
 
             Console.WriteLine("Вывести список названий библиотек");
@@ -271,10 +275,11 @@ namespace Lib
 
             Console.WriteLine("\nДля каждого жанра посчитать количество книг в нем (по всем библиотекам (без группировки)");
             var bookInGenre = from genr in genres
-                              join book in books on genr.Id equals book.genreId into g
+                              join book in books on genr.Id equals book.genreId
+                              group book.name by genr.title into g
                               select new
                               {
-                                  genreName = genr.name,
+                                  genreName = g.Key,
                                   bookCount = g.Count()
                               };
             foreach(var g in bookInGenre)
@@ -282,25 +287,108 @@ namespace Lib
                 Console.WriteLine($"{g.genreName} {g.bookCount}");
             }
 
+            Console.WriteLine("\nТестовый тест)");
+            var bookInLibs = from l in libs
+                             join ex in bookExemplars on l.Id equals ex.libraryId
+                             join b in books on ex.bookId equals b.Id
+                             join genre in genres on b.genreId equals genre.Id
+                             group new { ex, b, genre } by l into g
+                             select new
+                             {
+                                 exs = from l in g
+                                       select new
+                                       {
+                                           bName = l.b.name,
+                                           exId = l.ex.Id,
+                                           genreName = l.genre.title
+                                       },
+                                 libName = g.Key.title
+                             };
+            foreach(var l in bookInLibs)
+            {
+                Console.WriteLine(l.libName);
+                foreach (var ex in l.exs)
+                {
+                    Console.WriteLine($"{ex.bName} {ex.exId} {ex.genreName}");
+                }
+            }
+
             Console.WriteLine("\nДля каждого жанра посчитать количество книг в нем по каждой библиотеке (с группировкой по библиотеке)");
             var bookInGenrLib = from l in libs
-                                join ex in bookExemplars.Distinct() on l.Id equals ex.libraryId
+                                join ex in bookExemplars on l.Id equals ex.libraryId
                                 join b in books on ex.bookId equals b.Id
-                                join genr in genres on b.genreId equals genr.Id
-                                group genr.name by l.title into g
+                                join genre in genres on b.genreId equals genre.Id
+                                group new { genre, b } by l into g
                                 select new
                                 {
-                                    bookCount = g.Count(),
-                                    libName = g.Key,
-                                    genrName = g
+                                    exemps = from r in g
+                                             group r.b by r.genre into g2
+                                             select new
+                                             {
+                                                 genreName = g2.Key.title,
+                                                 bookCount = g2.Count()
+                                             },
+                                    libName = g.Key.title
                                 };
-            foreach(var a in bookInGenrLib)
+            foreach (var t in bookInGenrLib)
             {
-                Console.WriteLine(a.libName);
-                foreach (var g in a.genrName)
+                Console.WriteLine(t.libName);
+                foreach(var e in t.exemps)
                 {
-                    Console.WriteLine($"{g} {a.bookCount}");
+                    Console.WriteLine($"{e.genreName} {e.bookCount}");
                 }
+            }
+
+            Console.WriteLine("\nДля каждого жанра посчитать количество экземпляров книг");
+            var bookExempByGenre = from ex in bookExemplars
+                                   join b in books on ex.bookId equals b.Id
+                                   join genre in genres on b.genreId equals genre.Id
+                                   group ex by genre into g
+                                   select new
+                                   {
+                                       genreName = g.Key.title,
+                                       exempCount = g.Count()
+                                   };
+            foreach (var t in bookExempByGenre)
+            {
+                Console.WriteLine($"{t.genreName} {t.exempCount}");
+            }
+
+            Console.WriteLine("\nВывести самую читаемую книгу по всем библиотекам");
+            var mostReadeingBook = (from v in visitToLibraries
+                                   join ex in bookExemplars on v.bookExemplarId equals ex.Id
+                                   join b in books on ex.bookId equals b.Id
+                                   group v by b into g
+                                   orderby g.Count() descending
+                                   select new
+                                   {
+                                       bN = g.Key.name,
+                                       bCount = g.Count()
+                                   }).First();
+
+            Console.WriteLine($"{mostReadeingBook.bN} {mostReadeingBook.bCount}");
+
+            Console.WriteLine("\nВывести самую читаемую книгу для каждой библиотеки");
+            var mostReadingBookInLib = from l in libs
+                                       join ex in bookExemplars on l.Id equals ex.libraryId
+                                       join b in books on ex.bookId equals b.Id
+                                       join v in visitToLibraries on ex.Id equals v.bookExemplarId
+                                       group b by l into g
+                                       select new
+                                       {
+                                           books = (from b in g
+                                                   orderby g.Count() descending
+                                                   select new
+                                                   {
+                                                       bN = b.name,
+                                                       bCount = g.Count()
+                                                   }).First(),
+                                           libName = g.Key.title
+                                       };
+            foreach(var t in mostReadingBookInLib)
+            {
+                Console.WriteLine($"{t.libName}");
+                Console.WriteLine($"{t.books.bN} {t.books.bCount}");
             }
 
             Console.ReadKey();
